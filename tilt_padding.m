@@ -17,6 +17,7 @@ disp('xComponent = ')
 disp(xComponent)
 disp('yComponent = ')
 disp(yComponent)
+%%
 
 xCompoArray = double(xComponent');
 yCompoArray = double(yComponent');
