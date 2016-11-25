@@ -1,5 +1,5 @@
 %% 読み込み
-function tableMake = tilt_padding(filename, paramaterColumnNum, Dx, Dy)
+function tableMake = tilt_padding(filename, paramaterName, paramaterColumnNum, Dx, Dy)
 
 %% テーブルの作成
 
@@ -17,7 +17,6 @@ disp('xComponent = ')
 disp(xComponent)
 disp('yComponent = ')
 disp(yComponent)
-%%
 
 xCompoArray = double(xComponent');
 yCompoArray = double(yComponent');
@@ -176,13 +175,38 @@ writetable(tableMake, nameTiltFile)
 
 %% グラフ表示
 
+
+paramatername = paramaterName;
+nbins = 100;
+
 figure(1)
 imshow(tableMake.tiltMap)
+title1 = sprintf('%s %s image', filename,paramatername);
+figureName1 = sprintf('%s_%s_image.png', filename,paramatername);
+title(title1)
+saveas(gcf, figureName1);
+
 figure(2)
-histogram(tableMake.tiltMap)
+histogram(tableMake.tiltMap, nbins)
+title2 = sprintf('%s %s tiltMap', filename,paramatername);
+figureName2 = sprintf('%s_%s_tiltMap.png', filename,paramatername);
+title(title2)
+saveas(gcf, figureName2);
+
+
 figure(3)
-histogram(tableMake.curvature)
+histogram(tableMake.curvature, nbins)
+title3 = sprintf('%s %s curvature', filename,paramatername);
+figureName3 = sprintf('%s_%s_curvature.png', filename,paramatername);
+title(title3)
+saveas(gcf, figureName3);
+
 figure(4)
-histogram(tableMake.slopeOrientation)
+histogram(tableMake.slopeOrientation, nbins)
+title4 = sprintf('%s %s slopeOrientation', filename,paramatername);
+figureName4 = sprintf('%s_%s_slopeOrientation.png', filename,paramatername);
+title(title4)
+saveas(gcf, figureName4);
+
 
 end
