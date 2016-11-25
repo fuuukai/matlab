@@ -171,7 +171,7 @@ disp(slopeOrientation)
 %% テーブル作成
 
 tableMake = table(tiltMap, curvature, slopeOrientation);
-nameTiltFile = sprintf('%s_tilt.xls', filename);
+nameTiltFile = sprintf('%s_tilt.xlsx', filename);
 writetable(tableMake, nameTiltFile)
 
 %% グラフ表示

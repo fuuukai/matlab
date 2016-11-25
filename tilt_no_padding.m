@@ -171,7 +171,7 @@ end
 %% テーブル作成
 
 tableMake = table(tiltMap, curvature, slopeOrientation);
-nameTiltFile = sprintf('%s_tilt_no_padding.xls', filename);
+nameTiltFile = sprintf('%s_tilt_no_padding.xlsx', filename);
 writetable(tableMake, nameTiltFile)
 
 %% グラフ表示
