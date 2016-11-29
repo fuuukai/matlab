@@ -93,7 +93,7 @@ figure(1)
 %% åXéŒó 
 
 tiltMap = zeros(yLength, xLength);
-tiltMapArray = NaN(arrayLength, 1);
+tiltArray = NaN(arrayLength, 1);
 count =1;
 
 for j = 2:yLength-1
@@ -105,19 +105,19 @@ for j = 2:yLength-1
         tiltMap(j,i) = sqrt(Sx^2 + Sy^2);
         
         if imV(j,i) ~= 0
-            tiltMapArray(count, 1) = tiltMap(j,i);
+            tiltArray(count, 1) = tiltMap(j,i);
             count = count+1;
         end
             
     end
 end
 
-b = ~isnan(tiltMapArray);
-tiltMapArray = tiltMapArray(b);
+b = ~isnan(tiltArray);
+tiltArray = tiltArray(b);
 
 disp(tiltMap)
 imshow(tiltMap)
-disp(tiltMapArray)
+disp(tiltArray)
 
 %% éŒñ ã»ó¶
 
@@ -212,7 +212,6 @@ nameTiltFile = sprintf('%s_tilt_no_padding.xlsx', filename);
 writetable(tableMake, nameTiltFile)
 
 tableMakeNoNanData = table(tiltMapArray, curvatureArray, slopeOrientationArray);
-disp(tableMakeNoNanData)
 
 %% ÉOÉâÉtï\é¶Ç∆ê}ÇÃï€ë∂
 
@@ -226,47 +225,25 @@ figureName1 = sprintf('%s_%s_image_no_padding.png', filename,paramatername);
 title(title1)
 saveas(gcf, figureName1);
 
-% figure(2)
-% histogram(tableMake.tiltMap, nbins)
-% title2 = sprintf('%s %s tiltMap', filename,paramatername);
-% figureName2 = sprintf('%s_%s_tiltMap_no_padding.png', filename,paramatername);
-% title(title2)
-%saveas(gcf, figureName2);
-% 
-% figure(3)
-% histogram(tableMake.curvature, nbins)
-% title3 = sprintf('%s %s curvature', filename,paramatername);
-% figureName3 = sprintf('%s_%s_curvature_no_padding.png', filename,paramatername);
-% title(title3)
-% saveas(gcf, figureName3);
-% 
-% figure(4)
-% histogram(tableMake.slopeOrientation, nbins)
-% title4 = sprintf('%s %s slopeOrientation', filename,paramatername);
-% figureName4 = sprintf('%s_%s_slopeOrientation_no_padding.png', filename,paramatername);
-% title(title4)
-% saveas(gcf, figureName4);
-
 figure(2)
-histogram(tableMakeNoNanData.tiltMapArray, nbins)
+histogram(tableMake.tiltMap, nbins)
 title2 = sprintf('%s %s tiltMap', filename,paramatername);
 figureName2 = sprintf('%s_%s_tiltMap_no_padding.png', filename,paramatername);
 title(title2)
 saveas(gcf, figureName2);
 
 figure(3)
-histogram(tableMakeNoNanData.curvatureArray, nbins)
+histogram(tableMake.curvature, nbins)
 title3 = sprintf('%s %s curvature', filename,paramatername);
 figureName3 = sprintf('%s_%s_curvature_no_padding.png', filename,paramatername);
 title(title3)
 saveas(gcf, figureName3);
 
-
 figure(4)
-histogram(tableMakeNoNanData.slopeOrientationArray, nbins)
-title5 = sprintf('%s %s slopeOrientationArray', filename,paramatername);
-figureName5 = sprintf('%s_%s_slopeOrientation_no_padding.png', filename,paramatername);
-title(title5)
-saveas(gcf, figureName5);
+histogram(tableMake.slopeOrientation, nbins)
+title4 = sprintf('%s %s slopeOrientation', filename,paramatername);
+figureName4 = sprintf('%s_%s_slopeOrientation_no_padding.png', filename,paramatername);
+title(title4)
+saveas(gcf, figureName4);
 
 end
