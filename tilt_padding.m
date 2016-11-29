@@ -11,6 +11,8 @@ T = readtable(csvFileName);
 Tx = round(T.x,5);
 Ty = round(T.y,5);
 
+arrayLength = length(Tx);
+
 xComponent = unique(double(Tx));
 yComponent = unique(double(Ty));
 disp('xComponent = ')
@@ -90,6 +92,8 @@ disp(imV)
 %% 傾斜量
 
 tiltMap = zeros(yLength, xLength);
+tiltMapArray = NaN(arrayLength, 1);
+count =1;
 
 for j = 2:yLength+1
     for i = 2:xLength+1
@@ -98,11 +102,20 @@ for j = 2:yLength+1
         Sy = ( imV(j-1,i-1) + imV(j-1,i) + imV(j-1,i+1) - imV(j+1, i-1) - imV(j+1, i) - imV(j+1,i+1) ) / 6 * Dy;
         
         tiltMap(j-1,i-1) = sqrt(Sx^2 + Sy^2);
+        
+        if imV(j-1,i-1) ~= 0
+            tiltMapArray(count, 1) = tiltMap(j-1,i-1);
+            count = count+1;
+        end
 
     end
 end
-        disp(tiltMap)
-        imshow(tiltMap)
+
+b = ~isnan(tiltMapArray);
+tiltMapArray = tiltMapArray(b);
+disp('tiltMap=')
+disp(tiltMap)
+imshow(tiltMap)
 
 %% 斜面曲率
 
@@ -110,6 +123,9 @@ end
 slopeCurvature = zeros(yLength, xLength);
 %曲率
 curvature = zeros(yLength, xLength);
+
+curvatureArray = NaN(arrayLength, 1);
+count =1;
 
 for j = 2:yLength+1
     for i = 2:xLength+1
@@ -148,12 +164,24 @@ for j = 2:yLength+1
         slopeCurvature = 0;
         curvature(j-1,i-1) = -2 * (d+e) * 100;
         
+        if imV(j-1,i-1) ~= 0
+            curvatureArray(count, 1) = curvature(j-1,i-1);
+            count = count+1;
+        end
     end
 end
+
+b = ~isnan(curvatureArray);
+curvatureArray = curvatureArray(b);
+disp('curvatureArray=')
+disp(curvatureArray)
 
 %% 斜面方位図
 
 slopeOrientation = zeros(yLength, xLength);
+
+slopeOrientationArray = NaN(arrayLength, 1);
+count =1;
 
 for j = 2:yLength+1
     for i = 2:xLength+1
@@ -163,8 +191,18 @@ for j = 2:yLength+1
         
         slopeOrientation(j-1,i-1) =  atan( (Hx/Hy)*180/pi );
         
+        if imV(j-1,i-1) ~= 0
+            slopeOrientationArray(count, 1) = slopeOrientation(j-1,i-1);
+            count = count+1;
+        end
+        
     end
 end
+
+b = ~isnan(slopeOrientationArray);
+slopeOrientationArray = slopeOrientationArray(b);
+disp(slopeOrientationArray)
+
 disp('slopeOrientation=')
 disp(slopeOrientation)
 %% テーブル作成
@@ -172,6 +210,9 @@ disp(slopeOrientation)
 tableMake = table(tiltMap, curvature, slopeOrientation);
 nameTiltFile = sprintf('%s_tilt.xlsx', filename);
 writetable(tableMake, nameTiltFile)
+
+tableMakeNoNanData = table(tiltMapArray, curvatureArray, slopeOrientationArray);
+disp(tableMakeNoNanData)
 
 %% グラフ表示
 
@@ -186,27 +227,49 @@ figureName1 = sprintf('%s_%s_image.png', filename,paramatername);
 title(title1)
 saveas(gcf, figureName1);
 
+% figure(2)
+% histogram(tableMake.tiltMap, nbins)
+% title2 = sprintf('%s %s tiltMap', filename,paramatername);
+% figureName2 = sprintf('%s_%s_tiltMap.png', filename,paramatername);
+% title(title2)
+% saveas(gcf, figureName2);
+% 
+% 
+% figure(3)
+% histogram(tableMake.curvature, nbins)
+% title3 = sprintf('%s %s curvature', filename,paramatername);
+% figureName3 = sprintf('%s_%s_curvature.png', filename,paramatername);
+% title(title3)
+% saveas(gcf, figureName3);
+% 
+% figure(4)
+% histogram(tableMake.slopeOrientation, nbins)
+% title4 = sprintf('%s %s slopeOrientation', filename,paramatername);
+% figureName4 = sprintf('%s_%s_slopeOrientation.png', filename,paramatername);
+% title(title4)
+% saveas(gcf, figureName4);
+
+
 figure(2)
-histogram(tableMake.tiltMap, nbins)
+histogram(tableMakeNoNanData.tiltMapArray, nbins)
 title2 = sprintf('%s %s tiltMap', filename,paramatername);
-figureName2 = sprintf('%s_%s_tiltMap.png', filename,paramatername);
+figureName2 = sprintf('%s_%s_tiltMap_no_padding.png', filename,paramatername);
 title(title2)
 saveas(gcf, figureName2);
 
-
 figure(3)
-histogram(tableMake.curvature, nbins)
+histogram(tableMakeNoNanData.curvatureArray, nbins)
 title3 = sprintf('%s %s curvature', filename,paramatername);
-figureName3 = sprintf('%s_%s_curvature.png', filename,paramatername);
+figureName3 = sprintf('%s_%s_curvature_no_padding.png', filename,paramatername);
 title(title3)
 saveas(gcf, figureName3);
 
-figure(4)
-histogram(tableMake.slopeOrientation, nbins)
-title4 = sprintf('%s %s slopeOrientation', filename,paramatername);
-figureName4 = sprintf('%s_%s_slopeOrientation.png', filename,paramatername);
-title(title4)
-saveas(gcf, figureName4);
 
+figure(4)
+histogram(tableMakeNoNanData.slopeOrientationArray, nbins)
+title5 = sprintf('%s %s slopeOrientationArray', filename,paramatername);
+figureName5 = sprintf('%s_%s_slopeOrientation_no_padding.png', filename,paramatername);
+title(title5)
+saveas(gcf, figureName5);
 
 end
