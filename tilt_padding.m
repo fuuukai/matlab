@@ -272,4 +272,94 @@ figureName5 = sprintf('%s_%s_slopeOrientation_no_padding.png', filename,paramate
 title(title5)
 saveas(gcf, figureName5);
 
+
+%% 平均、分散、標準偏差、変動係数、歪度、尖度（傾斜度）
+
+til_mean = mean(tiltMapArray);    %平均
+til_var = var(tiltMapArray); %分散
+til_std = std(tiltMapArray); %標準偏差
+til_coefficientVariation = til_std/til_mean; %変動係数
+
+s=0;
+v=0;
+
+% n = dataの長さ
+n = length(tiltMapArray);
+
+for q = 1:n
+s = s +(tiltMapArray(q) - til_mean)^3;
+v = v +(tiltMapArray(q) - til_mean)^4;
+end
+
+til_skewness = s / (n * sqrt(til_var)^3); %歪度
+til_kurtosis = v / (n * til_var^2); %尖度
+
+
+tilMean = til_mean';
+tilVar = til_var';
+tilStd = til_std';
+tilCoefficientVariation = til_coefficientVariation';
+tilSkewness = til_skewness';
+tilKurtosis = til_kurtosis';
+
+%% 平均、分散、標準偏差、変動係数、歪度、尖度（斜面曲率）
+
+cur_mean = mean(curvatureArray);    %平均
+cur_var = var(curvatureArray); %分散
+cur_std = std(curvatureArray); %標準偏差
+cur_coefficientVariation = cur_std/cur_mean; %変動係数
+
+s=0;
+v=0;
+
+% n = dataの長さ
+n = length(curvatureArray);
+
+for q = 1:n
+s = s +(curvatureArray(q) - cur_mean)^3;
+v = v +(curvatureArray(q) - cur_mean)^4;
+end
+
+cur_skewness = s / (n * sqrt(cur_var)^3); %歪度
+cur_kurtosis = v / (n * cur_var^2); %尖度
+
+
+curMean = cur_mean';
+curVar = cur_var';
+curStd = cur_std';
+curCoefficientVariation = cur_coefficientVariation';
+curSkewness = cur_skewness';
+curKurtosis = cur_kurtosis';
+
+%% 平均、分散、標準偏差、変動係数、歪度、尖度（斜面方位図）
+
+ori_mean = mean(slopeOrientationArray);    %平均
+ori_var = var(slopeOrientationArray); %分散
+ori_std = std(slopeOrientationArray); %標準偏差
+ori_coefficientVariation = ori_std/ori_mean; %変動係数
+
+s=0;
+v=0;
+
+% n = dataの長さ
+n = length(slopeOrientationArray);
+
+for q = 1:n
+s = s +(slopeOrientationArray(q) - ori_mean)^3;
+v = v +(slopeOrientationArray(q) - ori_mean)^4;
+end
+
+ori_skewness = s / (n * sqrt(ori_var)^3); %歪度
+ori_kurtosis = v / (n * ori_var^2); %尖度
+
+oriMean = ori_mean';
+oriVar = ori_var';
+oriStd = ori_std';
+oriCoefficientVariation = ori_coefficientVariation';
+oriSkewness = ori_skewness';
+oriKurtosis = ori_kurtosis';
+
+%% Table作成
+T = table(tilMean, tilVar, tilStd, tilCoefficientVariation, tilSkewness, tilKurtosis, curMean, curVar, curStd, curCoefficientVariation, curSkewness, curKurtosis, oriMean ,oriVar, oriStd, oriCoefficientVariation, oriSkewness, oriKurtosis);
+disp(T)
 end
